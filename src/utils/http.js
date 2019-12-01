@@ -92,7 +92,6 @@ export default {
     // NProgress.set(0.4)
     return axios({
       method: 'post',
-      // baseURL: 'http://111.230.239.224:8079/',
       baseURL: 'http://192.168.43.152:8089/',
       url,
       data: qs.stringify(data),
@@ -119,7 +118,6 @@ export default {
     return axios({
       method: 'get',
       baseURL: 'http://192.168.43.152:8089/',
-      // baseURL: 'http://localhost:8079/',
       url,
       params, // get 请求时带的参数
       timeout: 60000,

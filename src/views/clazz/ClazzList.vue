@@ -13,9 +13,7 @@
 				<el-form-item>
 					<el-button type="success" class="el-icon-plus" v-on:click="showDialogForm">新增</el-button>
 				</el-form-item>
-<!-- 				<el-form-item>
-					<el-button type="danger" class="el-icon-delete" @click="delAttr">删除</el-button>
-				</el-form-item> -->
+
 			</el-form>
 		</el-col>
 
@@ -42,20 +40,7 @@
 	    prop="instituteName"
 	    label="所属学院" sortable>
 	  </el-table-column>
-<!-- 			<el-table-column
-			      fixed="right"
-			      label="操作"
-						width="180px"
-						align="center">
-			      <template slot-scope="scope">
-			      	<el-button
-							  @click.native="selDetails(scope.row.id)"
-			          type="text"
-			          size="small">
-			          属性明细
-			        </el-button>
-			      </template>
-			  </el-table-column> -->
+
     </el-table>
 		</el-col>
 
@@ -73,7 +58,7 @@
 		 </div>
 	</el-col>
 
-<!-- 新增属性 -->
+<!-- 新增班级 -->
 	<el-dialog title="新增班级" :visible.sync="dialogFormVisible1">
 	<div style="width:60%;margin: 0 auto">
 	<el-form ref="attr" :model="attr" :inline="false" label-width="90px" class="demo-ruleForm">
@@ -109,41 +94,7 @@
 		<el-button type="primary" @click="submitForm('attr')">确 定</el-button>
 	</div>
 </el-dialog>
-   <!-- 属性明细 -->
-<!--   <el-dialog title="属性明细" :visible.sync="dialogTableVisible1">
 
-		 <el-form ref="detail" :model="detail" :inline="true" label-width="90px" class="demo-ruleForm">
-	 	<el-form-item label="属性名称" prop="name" :rules="[
-	     { required: true, message: '请输入属性明细名称', trigger: 'blur' }
-	   ]">
-	 		<el-input type="text" v-model="detail.name" placeholder="请输入属性明细名称" auto-complete="off"></el-input>
-	 	</el-form-item>
-		<el-form-item>
-			<el-button  class="el-icon-arrow-right" type="primary"  @click="submitForm1('detail')">新增</el-button>
-		</el-form-item>
-		<el-form-item>
-			<el-button type="danger" class="el-icon-delete" @click="delDetails()">删除</el-button>
-		</el-form-item>
-	 	</el-form>
-
-	  <el-table :data="tableData2" @selection-change="handleSelectionChange2">
-			<el-table-column type="selection" width="55">
-			</el-table-column>
-	    <el-table-column property="id" label="id"></el-table-column>
-	    <el-table-column property="name" label="属性明细名称"></el-table-column>
-	  </el-table>
-		<div class="block" style="float: right;margin-right: 10px">
-			<el-pagination
-				@size-change="handleSizeChange2"
-				@current-change="handleCurrentChange2"
-				:current-page="startPage2"
-				:page-sizes="pageSizes2"
-				:page-size="pageSize2"
-				layout="total, sizes, prev, pager, next, jumper"
-				:total="total2">
-			</el-pagination>
-	 </div>
-	</el-dialog> -->
 	</el-row>
 
 
@@ -290,41 +241,6 @@ export default {
          _this.message(true,data.data.msg,'error')
 			}
 		},
-		// 删除属性提示
-		async delAttr () {
-			if (this.attrIds.length === 0) {
-				 this.message(true,'请选择需要删除的属性','warning')
-				 return
-			}
-			this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			}).then(() => {
-				this.delAttrs()
-			}).catch(() => {
-				this.message(true,'已取消删除','warning')
-			})
-		},
-		// 删除属性
-		async delAttrs() {
-      let _this = this
-			let params = {
-				ids: _this.attrIds
-			}
-			let data =await http.post('SysApi/v1/delAttributes', params)
-
-			if(!data.data) {
-				return
-			}
-
-			if (data.data.status === 200) {
-				 _this.message(true,data.data.msg,'success')
-			} else {
-				 _this.message(true,data.data.msg,'error')
-			}
-			_this.getFormData1()
-		},
 		// 获取选中集
 		handleSelectionChange1(val) {
 			this.attrIds = []
@@ -343,106 +259,6 @@ export default {
 		handleCurrentChange1 (val) {
 			this.startPage1 = val
 			this.getFormData1()
-		},
-
-		// 属性明细表单提交
-		submitForm1(formName) {
-			this.$refs[formName].validate((valid) => {
-				if (valid) {
-					this.addDetail()
-				} else {
-					console.log('error submit!!');
-					return false
-				}
-			})
-		},
-		// 添加属性明细
-		async addDetail() {
-			 let _this = this
-			 let params = {
-				 id: _this.attrId,
-				 name: _this.detail.name
-			 }
-			 let data = await http.post('SysApi/v1/addAttributeDetail', params)
-
-			 if(!data.data) {
-			 	return
-			 }
-
-			 if (data.data.status === 200) {
- 				  _this.resetForm('detail')
-           _this.message(true,data.data.msg,'success')
- 					_this.selDetails(this.attrId)
- 			} else {
-          _this.message(true,data.data.msg,'error')
- 			}
-		},
-		// 查询属性明细
-		async selDetails(id) {
-			let _this = this
-			_this.dialogTableVisible1 = true
-			_this.attrId = id
-			let params = {
-				id: id,
-				pageSize: _this.pageSize2,
-				startPage: _this.startPage2
-			}
-			let data = await http.get('SysApi/v1/findAttributesDetailByPage', params)
-
-			if(!data.data) {
-				return
-			}
-
-			if (data.data.status === 200) {
-				 _this.tableData2 = data.data.data
-				 _this.total2 = data.data.total
-			} else {
-				_this.message(true,data.data.msg,'error')
-				_this.formData2 = []
-			}
-		},
-		// 删除属性明细
-		async delDetails() {
-      let _this = this
-			if (_this.detailIds.length === 0) {
-				 this.message(true,'请选择需要删除的属性明细','warning')
-				 return
-			}
-
-			let params = {
-				ids: _this.detailIds
-			}
-			let data =await http.post('SysApi/v1/delAttributeDetails', params)
-
-			if(!data.data) {
-				return
-			}
-
-			if (data.data.status === 200) {
-				 _this.message(true,data.data.msg,'success')
-			} else {
-				 _this.message(true,data.data.msg,'error')
-			}
-			_this.selDetails(this.attrId)
-		},
-		// 获取选中集
-		handleSelectionChange2(val) {
-			this.detailIds = []
-			if (val) {
-			 val.forEach(row => {
-				 this.detailIds.push(row.id)
-			 });
-		 }
-		},
-		// 每页大小改变时触发
-		handleSizeChange2 (val) {
-			this.pageSize2 = val
-			this.selDetails(this.attrId)
-		},
-		// 当前页码改变时触发
-		handleCurrentChange2 (val) {
-			this.startPage2 = val
-			this.selDetails(this.attrId)
 		},
 		/**
 		 * ifshow: true/false msg: message  type: error/warning/success
