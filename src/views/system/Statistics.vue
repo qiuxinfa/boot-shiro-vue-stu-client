@@ -42,15 +42,15 @@
           // 统计用户登录次数
           async getUserLoginTotal () {
             let _this = this
-            let data = await http.get('SysApi/v1/findUserLoginTotal')
+            let data = await http.get('sys/findUserLoginTotal')
 
             if(!data.data) {
     					return
     				}
 
             if (data.data.status === 200) {
-               _this.userName = data.data.data[0].name
-               _this.loginTotal = data.data.data[0].total
+               _this.userName = data.data.data.name
+               _this.loginTotal = data.data.data.total
             } else {
               const h = this.$createElement;
               this.$notify({
@@ -63,7 +63,7 @@
           // 统计用户访问
           async getUserReqTotal () {
             let _this = this
-            let data = await http.get('SysApi/v1/findUserReqTotal')
+            let data = await http.get('sys/findUserReqTotal')
 
             if(!data.data) {
               _this.listLoading = false
@@ -71,9 +71,9 @@
             }
 
             if (data.data.status === 200) {
-               _this.arrNa = data.data.data[0].arrName
-               _this.reqData1 = data.data.data[0].metlist
-               _this.reqData2 = data.data.data[0].usrlist
+               _this.arrNa = data.data.data.arrName
+               _this.reqData1 = data.data.data.methodList
+               _this.reqData2 = data.data.data.userList
             } else {
               const h = this.$createElement;
               this.$notify({

@@ -13,9 +13,9 @@
 				<el-form-item>
 					<el-button type="success" class="el-icon-plus" v-on:click="showDialogForm">新增</el-button>
 				</el-form-item>
-<!-- 				<el-form-item>
+				<el-form-item>
 					<el-button type="danger" class="el-icon-delete" @click="delAttr">删除</el-button>
-				</el-form-item> -->
+				</el-form-item>
 			</el-form>
 		</el-col>
 
@@ -24,8 +24,8 @@
 			v-loading="listLoading" element-loading-text="拼命加载中"
       :data="tableData1"
 			@selection-change="handleSelectionChange1">
-<!-- 			<el-table-column type="selection" width="55">
-			</el-table-column> -->
+			<el-table-column type="selection" width="55">
+			</el-table-column>
 <!--      <el-table-column
         prop="id"
         label="id">
@@ -168,41 +168,7 @@
 		<el-button type="primary" @click="submitForm('attr')">确 定</el-button>
 	</div>
 </el-dialog>
-   <!-- 属性明细 -->
-<!--   <el-dialog title="属性明细" :visible.sync="dialogTableVisible1">
 
-		 <el-form ref="detail" :model="detail" :inline="true" label-width="90px" class="demo-ruleForm">
-	 	<el-form-item label="属性名称" prop="name" :rules="[
-	     { required: true, message: '请输入属性明细名称', trigger: 'blur' }
-	   ]">
-	 		<el-input type="text" v-model="detail.name" placeholder="请输入属性明细名称" auto-complete="off"></el-input>
-	 	</el-form-item>
-		<el-form-item>
-			<el-button  class="el-icon-arrow-right" type="primary"  @click="submitForm1('detail')">新增</el-button>
-		</el-form-item>
-		<el-form-item>
-			<el-button type="danger" class="el-icon-delete" @click="delDetails()">删除</el-button>
-		</el-form-item>
-	 	</el-form>
-
-	  <el-table :data="tableData2" @selection-change="handleSelectionChange2">
-			<el-table-column type="selection" width="55">
-			</el-table-column>
-	    <el-table-column property="id" label="id"></el-table-column>
-	    <el-table-column property="name" label="属性明细名称"></el-table-column>
-	  </el-table>
-		<div class="block" style="float: right;margin-right: 10px">
-			<el-pagination
-				@size-change="handleSizeChange2"
-				@current-change="handleCurrentChange2"
-				:current-page="startPage2"
-				:page-sizes="pageSizes2"
-				:page-size="pageSize2"
-				layout="total, sizes, prev, pager, next, jumper"
-				:total="total2">
-			</el-pagination>
-	 </div>
-	</el-dialog> -->
 	</el-row>
 
 
@@ -407,10 +373,10 @@ export default {
 		// 删除属性提示
 		async delAttr () {
 			if (this.attrIds.length === 0) {
-				 this.message(true,'请选择需要删除的属性','warning')
+				 this.message(true,'请选择需要删除的课程','warning')
 				 return
 			}
-			this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+			this.$confirm('此操作将永久删除, 是否继续?', '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
@@ -426,7 +392,7 @@ export default {
 			let params = {
 				ids: _this.attrIds
 			}
-			let data =await http.post('SysApi/v1/delAttributes', params)
+			let data =await http.post('course/delete', params)
 
 			if(!data.data) {
 				return

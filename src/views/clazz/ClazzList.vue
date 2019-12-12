@@ -13,7 +13,9 @@
 				<el-form-item>
 					<el-button type="success" class="el-icon-plus" v-on:click="showDialogForm">新增</el-button>
 				</el-form-item>
-
+				<el-form-item>
+					<el-button type="danger" class="el-icon-delete" @click="batchDelete">删除</el-button>
+				</el-form-item>
 			</el-form>
 		</el-col>
 
@@ -22,8 +24,8 @@
 			v-loading="listLoading" element-loading-text="拼命加载中"
       :data="tableData1"
 			@selection-change="handleSelectionChange1">
-<!-- 			<el-table-column type="selection" width="55">
-			</el-table-column> -->
+			<el-table-column type="selection" width="55">
+			</el-table-column>
 <!--      <el-table-column
         prop="id"
         label="id">
@@ -240,6 +242,38 @@ export default {
 			} else {
          _this.message(true,data.data.msg,'error')
 			}
+		},
+		// 批量删除
+		batchDelete () {
+			if (this.attrIds.length === 0) {
+				 this.message(true,'请选择需要删除的数据','error')
+				 return
+			}
+			this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'error'
+			}).then(() => {
+                this.doDelete()
+			}).catch(() => {
+				this.message(true,'已取消删除','error')
+			})
+		},
+		// 执行删除操作
+		async doDelete () {
+			let params = {
+				ids: this.attrIds
+			}
+			let data =await http.post('clazz/delete', params)
+			if(!data.data) {
+				return
+			}
+			if (data.data.status === 200) {
+				 this.message(true,data.data.msg,'success')
+			} else {
+				 this.message(true,data.data.msg,'error')
+			}
+			this.getFormData1()
 		},
 		// 获取选中集
 		handleSelectionChange1(val) {
