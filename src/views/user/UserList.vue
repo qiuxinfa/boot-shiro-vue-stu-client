@@ -18,9 +18,9 @@
 				<el-form-item>
 					<el-button type="danger" class="el-icon-delete" @click="delUser">删除</el-button>
 				</el-form-item>
-				<el-form-item>
+<!-- 				<el-form-item>
 					<el-button type="primary" class="el-icon-edit" @click="toueditor">百度富文本框</el-button>
-				</el-form-item>
+				</el-form-item> -->
 			</el-form>
 		</el-col>
 

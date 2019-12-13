@@ -10,9 +10,9 @@
 				<el-form-item>
 					<el-button type="primary" class="el-icon-search" v-on:click="getFormData1">查询</el-button>
 				</el-form-item>
-				<el-form-item>
+<!-- 				<el-form-item>
 					<el-button type="success" class="el-icon-plus" v-on:click="selectCourse">选课</el-button>
-				</el-form-item>
+				</el-form-item> -->
 <!-- 				<el-form-item>
 					<el-button type="danger" class="el-icon-delete" @click="delAttr">删除</el-button>
 				</el-form-item> -->

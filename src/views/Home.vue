@@ -14,7 +14,7 @@
 					<span class="el-dropdown-link userinfo-inner"><img :src="userImg" /> 欢迎您,{{nickName}}</span>
 					<el-dropdown-menu slot="dropdown">
 						<el-dropdown-item>我的消息</el-dropdown-item>
-						<el-dropdown-item @click.native="personalCenter">个人中心</el-dropdown-item>
+						<el-dropdown-item @click.native="personalCenter">修改资料</el-dropdown-item>
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>

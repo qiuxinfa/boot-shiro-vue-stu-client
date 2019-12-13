@@ -19,6 +19,7 @@ import TeacherList from './views/teacher/TeacherList.vue'
 import CourseList from './views/course/CourseList.vue'
 import MyCourseList from './views/mycourse/MyCourseList.vue'
 import CourseCenter from './views/coursecenter/CourseCenter.vue'
+import GradeCenter from './views/grade/GradeCenter.vue'
 
 let router = [
     {
@@ -135,7 +136,16 @@ let router = [
 	    children: [
 	        { path: '/course/center', component: CourseCenter, name: '课程中心' },
 	    ]
-	},				
+	},	
+	{
+	    path: '/',
+	    component: Home,
+	    name: '个人中心',
+	    iconCls: 'icon iconfont icon-dic-manager',
+	    children: [
+	        { path: '/grade/center', component: GradeCenter, name: '成绩统计' },
+	    ]
+	},						
     {
         path: '/',
         component: Home,
