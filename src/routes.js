@@ -20,6 +20,11 @@ import CourseList from './views/course/CourseList.vue'
 import MyCourseList from './views/mycourse/MyCourseList.vue'
 import CourseCenter from './views/coursecenter/CourseCenter.vue'
 import GradeCenter from './views/grade/GradeCenter.vue'
+import myExam from './views/exam/myExam.vue'
+import examDetail from './views/exam/examDetail.vue'
+import answer from './views/exam/answer.vue'
+import paperManager from './views/exam/paperManager.vue'
+import questionManager from './views/exam/questionManager.vue'
 
 let router = [
     {
@@ -46,6 +51,15 @@ let router = [
             { path: '/ueditor', component: Ueditor, name: '富文本测试' },
         ]
     },
+	{
+	    path: '/',
+	    component: Home,
+	    name: '考试管理',
+	    children: [
+	        { path: '/paper', component: paperManager, name: '考试管理'},
+	        { path: '/question', component: questionManager, name: '题库管理' }
+	    ]
+	},
     {
         path: '/',
         component: Home,
@@ -126,6 +140,9 @@ let router = [
 	    iconCls: 'icon iconfont icon-dic-manager',
 	    children: [
 	        { path: '/course/mycourse', component: MyCourseList, name: '我的课程' },
+			{ path: '/exam', component: myExam, name: '我的考试' },
+			{ path: '/examDetail', component: examDetail, name: '考试详情' },
+			{ path: '/answer', component: answer, name: '考试答题' }
 	    ]
 	},	
 	{
