@@ -18,6 +18,26 @@
 				<el-form-item>
 					<el-button type="danger" class="el-icon-delete" @click="delUser">删除</el-button>
 				</el-form-item>
+				<el-form-item>
+					<el-button type="primary" plain @click="exportUser">blob导出</el-button>
+				</el-form-item>
+				<el-form-item>
+					<el-button type="infor" round @click="exportUserByA">a标签导出</el-button>
+				</el-form-item>
+				<el-form-item>
+				   <el-upload class="upload-demo" 
+								 :action="uploadUrl2" 
+								 :before-upload="handleBeforeUpload2"  
+								 :on-error="handleUploadError" 
+								 :before-remove="beforeRemove" 
+								 multiple 
+								 :limit="1"
+								 :on-exceed="handleExceed" 
+								 accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+								 :file-list="fileList">
+				      <el-button size="small" type="primary">批量导入用户</el-button>
+				   </el-upload>
+				</el-form-item>
 <!-- 				<el-form-item>
 					<el-button type="primary" class="el-icon-edit" @click="toueditor">百度富文本框</el-button>
 				</el-form-item> -->
@@ -110,6 +130,26 @@
 					inactive-color="#ff4949">
 				</el-switch>
 			</el-form-item>
+		
+		<el-form-item>
+		   <a href="http://192.168.43.152:8089/file/download?fileName=11.xls">下载附件</a>
+		 </el-form-item>
+		 <el-form-item>
+		   <el-upload class="upload-demo" 
+						 :auto-upload='isAutoUpload'
+						 :action="uploadUrl" 
+						 :before-upload="handleBeforeUpload"  
+						 :on-error="handleUploadError" 
+						 :before-remove="beforeRemove" 
+						 multiple 
+						 :limit="5"
+						 :on-exceed="handleExceed" 
+						 :file-list="fileList">
+		      <el-button size="small" type="primary">点击上传</el-button>
+		   </el-upload>
+		</el-form-item>
+		
+			
 	  </el-form>
 	 </div>
 	  <div slot="footer" class="dialog-footer">
@@ -124,7 +164,9 @@
 
 <script>
   import http from '../../utils/http'
-	import md5 from 'js-md5'
+  import md5 from 'js-md5'
+  import axios from 'axios'
+  
   let Base64 = require('js-base64').Base64
 	export default {
 		data() {
@@ -139,6 +181,16 @@
         }
       }
 			return {
+			 //  form: {
+				// fileName: '',
+			 //  },
+			 isAutoUpload: true,
+			   uploadUrl: 'http://192.168.43.152:8089/file/upload',
+			   uploadUrl2: 'http://192.168.43.152:8089/user/import',
+			   fileList: [],
+			 //   fileHeaders:{
+				//    'Content-Type': 'multipart/form-data'
+			 //   },
 				filters: {
 					keyword: ''
 				},
@@ -190,6 +242,85 @@
 			}
 		},
 		methods: {
+			    //测试下载文件(注意web的上下文)
+			    handleDownLoad() {
+			      window.location.href = `/file/download?fileName=` + this.form.fileName
+			    },
+			      handleExceed(files, fileList) {
+			        this.$message.warning(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+			      },
+			      beforeRemove(file, fileList) {
+			        return this.$confirm(`确定移除 ${ file.name }？`);
+			      },
+			      handleUploadError(error, file) {
+			      console.log("文件上传出错："+error)
+			       // this.$notify.error({
+			       //          title: 'error',
+			       //          message: '上传出错:' +  error,
+			       //          type: 'error',
+			       //          position: 'bottom-right'
+			       //        })
+			    },
+			    //测试上传文件(注意web的上下文)
+			    handleBeforeUpload(file){
+					this.uploadUrl = 'http://192.168.43.152:8089/file/upload'
+					console.log("开始上传，上传的文件为："+file)
+					let formData = new FormData();
+					formData.append("multipartFiles", file);
+					axios({
+						  method: 'post',
+						  url: 'http://192.168.43.152:8089/file/upload',
+						  data: formData,
+						  headers: {'Content-Type': 'multipart/form-data' }
+					  }).then((res) => {
+						  console.log("文件上传返回："+res)
+					  }).catch(error => {
+						  console.log("文件上传异常:"+error)
+					  })
+					
+			         // this.uploadUrl ='http://192.168.43.152:8089/file/upload'
+			    },
+				//导入
+				handleBeforeUpload2(file){
+					debugger
+					this.fileTemp = file
+					let fileName = file.name
+					let fileType = fileName.substring(fileName.lastIndexOf('.') + 1);
+					
+					// 判断上传文件格式
+					if (this.fileTemp) {
+						if ((fileType != 'xlsx') && (fileType != 'xls')) {
+							this.$message({
+								type: 'warning',
+								message: '附件格式错误，请删除后重新上传！'
+							})
+							return;
+						}
+					} else {
+						this.$message({
+							type: 'warning',
+							message: '请上传附件！'
+						})
+						return;
+					}
+				
+					this.uploadUrl = 'http://192.168.43.152:8089/user/import'
+					console.log("开始上传，上传的文件为："+file)
+					let formData = new FormData();
+					formData.append("multipartFiles", file);
+					axios({
+						  method: 'post',
+						  url: 'http://192.168.43.152:8089/user/import',
+						  data: formData,
+						  headers: {'Content-Type': 'multipart/form-data' }
+					  }).then((res) => {
+						  console.log("文件上传返回："+res)
+					  }).catch(error => {
+						  console.log("文件上传异常:"+error)
+					  })
+					
+				     // this.uploadUrl ='http://192.168.43.152:8089/file/upload'
+				},
 			// 查询用户
 			async getUsers () {
 				let _this = this
@@ -290,6 +421,45 @@
 				}
 				this.getUsers()
 			},
+			// 导出用户，通过blob
+			exportUser () {
+				axios({
+					  method: 'post',
+					  url: 'http://192.168.43.152:8089/user/export',
+					  data: {
+					   username: this.filters.keyword
+					  },
+					  responseType: 'blob'
+				  }).then((res) => {
+					  console.log(res)
+					  const link = document.createElement('a')
+					  let blob = new Blob([res.data],{type: 'application/vnd.ms-excel'});
+					  link.style.display = 'none'
+					  link.href = URL.createObjectURL(blob);
+					  console.log("href:"+link.href)
+					  let num = ''
+					  for(let i=0;i < 10;i++){
+					   num += Math.ceil(Math.random() * 10)
+					  }
+					  link.setAttribute('download', num + '.xls')
+					  document.body.appendChild(link)
+					  link.click()
+					  document.body.removeChild(link)
+				  }).catch(error => {
+					  console.log(error)
+				  })
+				
+			},			
+			// 导出用户，通过a标签
+			exportUserByA () {
+				let username = this.filters.keyword
+				const link = document.createElement('a')
+				link.href = "http://192.168.43.152:8089/user/export?username="+username
+				document.body.appendChild(link)
+				link.click()
+				document.body.removeChild(link)
+				
+			},				
 			// 查询角色
 			async getCboData () {
 				let _this = this
