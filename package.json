@@ -10,7 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "axios": "^0.16.2",
+    "axios": "^0.21.1",
     "echarts": "^3.3.2",
     "element-ui": "^2.0.11",
     "eslint-plugin-promise": "^3.6.0",
