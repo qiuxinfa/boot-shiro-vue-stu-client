@@ -1,3 +1,4 @@
+# 精力有限，此项目已停止维护
 # boot-shiro-vue-stu-client
 
 这是springboot+shiro+vue的学生信息管理系统的客户端
